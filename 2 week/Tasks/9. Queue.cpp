@@ -68,18 +68,18 @@ public:
 
 
 int main() {
-    stringstream teststream("8\nCOME 5\nWORRY 1\nWORRY 4\nCOME -2\nWORRY_COUNT\nCOME 3\nWORRY 3\nWORRY_COUNT\n");
+    stringstream cin("8\nCOME 5\nWORRY 1\nWORRY 4\nCOME -2\nWORRY_COUNT\nCOME 3\nWORRY 3\nWORRY_COUNT\n");
 
 
     int commands_amount;
-    teststream >> commands_amount;
+    cin >> commands_amount;
     vector <Command> commands(commands_amount);
     Queue queue;
 
     for (int i = 0; i < commands_amount; i++) {
-        teststream >> commands[i].name;
-        if (teststream.peek() == ' ')
-            teststream >> commands[i].value;
+        cin >> commands[i].name;
+        if (cin.peek() == ' ')
+            cin >> commands[i].value;
     }
 
     for (const auto& command : commands) {
