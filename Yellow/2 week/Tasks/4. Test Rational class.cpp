@@ -8,8 +8,6 @@
 
 using namespace std;
 
-//Testing framework
-
 template <class T>
 ostream& operator << (ostream& os, const vector<T>& s) {
   os << "{";
@@ -58,7 +56,7 @@ void AssertEqual(const T& t, const U& u, const string& hint = {}) {
     ostringstream os;
     os << "Assertion failed: " << t << " != " << u;
     if (!hint.empty()) {
-      os << " hint: " << hint;
+       os << " hint: " << hint;
     }
     throw runtime_error(os.str());
   }
@@ -95,60 +93,82 @@ private:
   int fail_count = 0;
 };
 
-//Class
-
-class Person {
+class Rational {
 public:
-  // Вы можете вставлять сюда различные реализации класса,
-  // чтобы проверить, что ваши тесты пропускают корректный код
-  // и ловят некорректный
-  void ChangeFirstName(int year, const string& first_name) {}
-  void ChangeLastName(int year, const string& last_name) {}
-  string GetFullName(int year) {
-    return "Incognito";
-  }
+    Rational(int numerator = 0, int denominator = 1) {
+        if (numerator == 0) {
+            num = 0;
+            denom = 1;
+        } else {
+            int sign;
+            if (numerator * denominator > 0) {
+                sign = 1;
+            } else {
+                sign = -1; 
+            }
+            int gcd = GCD(abs(numerator), abs(denominator));
+            num = sign * abs(numerator) / gcd;
+            denom = abs(denominator) / gcd;
+        }
+    }
+
+    int Numerator() const {
+        return num;
+    }
+
+    int Denominator() const {
+        return denom;
+    }
+
+private:
+    int GCD(int a, int b) {
+        while (b) {
+            a %= b;
+            swap (a, b);
+        }
+        return a;
+    }
+
+    int num;
+    int denom;
 };
 
-//Tests
-void TestIncognito () {
-  Person p;
-  AssertEqual(p.GetFullName(0),"Incognito","1");
-  p.ChangeFirstName(1000, "Nik");
-  AssertEqual(p.GetFullName(0),"Incognito","2");
-  p.ChangeLastName(2000, "Kov");
-  AssertEqual(p.GetFullName(0),"Incognito","3");
+void TestConstructor() {
+  {
+    Rational r;
+    AssertEqual(r.Numerator(), 0, "0");
+    AssertEqual(r.Denominator(), 1, "1");
+  }
+  {
+    Rational r(1, 1);
+    AssertEqual(r.Numerator(), 1, "2");
+    AssertEqual(r.Denominator(), 1, "3");
+  }
+  {
+    Rational r(1, -1);
+    AssertEqual(r.Numerator(), -1, "4");
+    AssertEqual(r.Denominator(), 1, "5");
+  }
+  {
+    Rational r(-1, -1);
+    AssertEqual(r.Numerator(), 1, "4");
+    AssertEqual(r.Denominator(), 1, "5");
+  }
+  {
+    Rational r(30, 99);
+    AssertEqual(r.Numerator(), 10, "6");
+    AssertEqual(r.Denominator(), 33, "7");
+  }
+  {
+    Rational r(0, 99);
+    AssertEqual(r.Numerator(), 0, "8");
+    AssertEqual(r.Denominator(), 1, "9");
+  }
 }
-
-void TestFirstName () {
-  Person p;
-  AssertEqual(p.GetFullName(2000),"Incognito","1");
-  p.ChangeFirstName(1000, "Nik");
-  AssertEqual(p.GetFullName(2000),"Nik with unknown last name","2");
-  p.ChangeFirstName(3000, "Nikom");
-  AssertEqual(p.GetFullName(2000),"Nik with unknown last name","2");
-
-  p.ChangeLastName(1000, "Kov");
-  AssertEqual(p.GetFullName(0),"Nik Kov","3");
-}
-
-void TestLastName () {
-  Person p;
-  AssertEqual(p.GetFullName(2000),"Incognito","1");
-  p.ChangeLastName(1000, "Nik");
-  AssertEqual(p.GetFullName(2000),"Nik with unknown first name","2");
-  p.ChangeLastName(3000, "Nikom");
-  AssertEqual(p.GetFullName(2000),"Nik with unknown first name","2");
-
-  p.ChangeFirstName(1000, "Kov");
-  AssertEqual(p.GetFullName(0),"Kov Nik","3");
-}
-
 
 int main() {
   TestRunner runner;
-  runner.RunTest(TestIncognito, "TestIncognito");
-  runner.RunTest(TestLastName, "TestLastNameo");
-  runner.RunTest(TestFirstName, "TestFirstName");
+  runner.RunTest(TestConstructor,"TestConstructor");
 
   return 0;
 }
