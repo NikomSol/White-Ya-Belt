@@ -1,9 +1,7 @@
 /.vscode
 **/*.exe
-Yellow/3 week/Conspect/cmake test/.vscode/c_cpp_properties.json
-Yellow/3 week/Conspect/cmake test/.vscode/launch.json
-Yellow/3 week/Conspect/cmake test/.vscode/tasks.json
-Yellow/3 week/Conspect/codeblocks test/codeblocks test.cbp
-Yellow/3 week/Conspect/codeblocks test/codeblocks test.layout
-Yellow/3 week/Conspect/codeblocks test/obj/Debug/main.o
-Yellow/3 week/Conspect/codeblocks test/obj/Release/main.o
+*.json
+*.o
+*.cbp
+*.depend
+*.layout
